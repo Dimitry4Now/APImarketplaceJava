@@ -5,8 +5,8 @@ import dibe.develop.marketplace.entity.Person;
 import dibe.develop.marketplace.entity.Vehicle;
 import dibe.develop.marketplace.enums.Body;
 import dibe.develop.marketplace.enums.Transmission;
-import dibe.develop.marketplace.repository.PersonRepository;
-import dibe.develop.marketplace.repository.VehicleRepository;
+import dibe.develop.marketplace.service.PersonService;
+import dibe.develop.marketplace.service.VehicleService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,12 +22,12 @@ public class PriceImBoxApplication {
 	}
 
 	@Bean
-	CommandLineRunner init(PersonRepository personRepository, VehicleRepository vehicleRepository) {
+	CommandLineRunner init(PersonService personService, VehicleService vehicleService) {
 		return args -> {
 			Stream.of("John Snow", "Julie Caesar", "Jennifer Lopez", "Helen Whatever", "Rachel Swift", "Goce Adzhiski").forEach(name -> {
 				String[] nameSurname = name.split(" ");
 				Person person = new Person(nameSurname[0], nameSurname[1], nameSurname[0].toLowerCase() + "." + nameSurname[1].toLowerCase() + "@domain.com");
-				personRepository.save(person);
+				personService.save(person);
 			});
 			Stream.of("BMW E30", "Nissan Skyline", "Suzuki Maruti", "Opel Astra").forEach(name -> {
 				String[] makeModel = name.split(" ");
@@ -50,11 +50,11 @@ public class PriceImBoxApplication {
 				vehicle.setPrice(0.314);
 				vehicle.setCurrency(Currency.BITCOIN);
 				vehicle.setVIN("WZ008271237821");
-				vehicle.setOwnerId(personRepository.findByNameAndSurname("Goce", "Adzhiski").getId());
-				vehicleRepository.save(vehicle);
+				vehicle.setOwnerId(personService.findByNameAndSurname("Goce", "Adzhiski").getId());
+				vehicleService.save(vehicle);
 			});
-			personRepository.findAll().forEach(System.out::println);
-			vehicleRepository.findAll().forEach(System.out::println);
+			personService.findAll().forEach(System.out::println);
+			vehicleService.findAll().forEach(System.out::println);
 		};
 	}
 }
