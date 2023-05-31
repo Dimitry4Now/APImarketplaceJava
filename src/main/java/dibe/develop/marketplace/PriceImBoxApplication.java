@@ -5,8 +5,10 @@ import dibe.develop.marketplace.entity.Person;
 import dibe.develop.marketplace.entity.Vehicle;
 import dibe.develop.marketplace.enums.Body;
 import dibe.develop.marketplace.enums.Transmission;
+import dibe.develop.marketplace.service.FileStorageService;
 import dibe.develop.marketplace.service.PersonService;
 import dibe.develop.marketplace.service.VehicleService;
+import jakarta.annotation.Resource;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,13 +18,15 @@ import java.util.stream.Stream;
 
 @SpringBootApplication
 public class PriceImBoxApplication {
-
+	@Resource
+	FileStorageService storageService;
 	public static void main(String[] args) {
 		SpringApplication.run(PriceImBoxApplication.class, args);
 	}
 
 	@Bean
 	CommandLineRunner init(PersonService personService, VehicleService vehicleService) {
+
 		return args -> {
 			Stream.of("John Snow", "Julie Caesar", "Jennifer Lopez", "Helen Whatever", "Rachel Swift", "Goce Adzhiski").forEach(name -> {
 				String[] nameSurname = name.split(" ");
@@ -55,6 +59,8 @@ public class PriceImBoxApplication {
 			});
 			personService.findAll().forEach(System.out::println);
 			vehicleService.findAll().forEach(System.out::println);
+			storageService.deleteAll();
+			storageService.init();
 		};
 	}
 }
